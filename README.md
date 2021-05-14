@@ -1,8 +1,6 @@
 # Mezzala
-> Models for estimating football teams's strength
+> Models for estimating football (soccer) team-strength
 
-
-This file will become your README and also the index of your documentation.
 
 ## Install
 
