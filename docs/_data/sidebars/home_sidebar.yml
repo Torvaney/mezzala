@@ -10,8 +10,23 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
+      title: Data Adapters
+      url: adapters.html
+    - output: web,pdf
+      title: Model blocks
+      url: blocks.html
+    - output: web,pdf
       title: Core
       url: core.html
+    - output: web,pdf
+      title: Models
+      url: models.html
+    - output: web,pdf
+      title: Parameters
+      url: parameters.html
+    - output: web,pdf
+      title: Weights
+      url: weights.html
     output: web
     title: mezzala
   output: web

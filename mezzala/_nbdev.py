@@ -2,23 +2,32 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"UniformWeight": "00_core.ipynb",
-         "ExponentialWeight": "00_core.ipynb",
-         "DixonColesParameterKey": "00_core.ipynb",
-         "RHO_KEY": "00_core.ipynb",
-         "HFA_KEY": "00_core.ipynb",
-         "AVG_KEY": "00_core.ipynb",
-         "KeyAdapter": "00_core.ipynb",
-         "AttributeAdapter": "00_core.ipynb",
-         "LumpedAdapter": "00_core.ipynb",
-         "DixonColes": "00_core.ipynb",
-         "ModelBlockABC": "00_core.ipynb",
-         "BaseRate": "00_core.ipynb",
-         "HomeAdvantage": "00_core.ipynb",
-         "TeamStrength": "00_core.ipynb",
-         "KeyBlock": "00_core.ipynb"}
+index = {"KeyAdapter": "adapters.ipynb",
+         "AttributeAdapter": "adapters.ipynb",
+         "LumpedAdapter": "adapters.ipynb",
+         "ModelBlockABC": "blocks.ipynb",
+         "BaseRate": "blocks.ipynb",
+         "HomeAdvantage": "blocks.ipynb",
+         "TeamStrength": "blocks.ipynb",
+         "KeyBlock": "blocks.ipynb",
+         "DixonColes": "models.ipynb",
+         "ParameterKey": "parameters.ipynb",
+         "RHO_KEY": "parameters.ipynb",
+         "HFA_KEY": "parameters.ipynb",
+         "AVG_KEY": "parameters.ipynb",
+         "TeamParameterKey": "parameters.ipynb",
+         "OffenceParameterKey": "parameters.ipynb",
+         "DefenceParameterKey": "parameters.ipynb",
+         "UniformWeight": "weights.ipynb",
+         "ExponentialWeight": "weights.ipynb",
+         "KeyWeight": "weights.ipynb"}
 
-modules = ["__init__.py"]
+modules = ["adapters.py",
+           "blocks.py",
+           "__init__.py",
+           "models.py",
+           "parameters.py",
+           "weights.py"]
 
 doc_url = "https://Torvaney.github.io/mezzala/"
 

@@ -1,6 +1,11 @@
 {
   "mezzala": {
     "Overview": "/",
-    "Core": "core.html"
+    "Data Adapters": "adapters.html",
+    "Model blocks": "blocks.html",
+    "Core": "core.html",
+    "Models": "models.html",
+    "Parameters": "parameters.html",
+    "Weights": "weights.html"
   }
 }
