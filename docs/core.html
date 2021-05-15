@@ -39,6 +39,7 @@ nb_path: "nbs/core.ipynb"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
 </pre></div>
 
     </div>
@@ -220,7 +221,7 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/ben/code/mezzala/mezzala/models.py:80: RuntimeWarning: invalid value encountered in log
+<pre>/Users/ben/code/mezzala/mezzala/models.py:135: RuntimeWarning: invalid value encountered in log
   np.log(self._tau(home_goals, away_goals, home_rate, away_rate, rho))
 </pre>
 </div>
@@ -257,46 +258,46 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>OffenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.15
-OffenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 0.66
-OffenceParameterKey(label=&#39;Arsenal FC&#39;)              : 1.25
-OffenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 1.33
+<pre>OffenceParameterKey(label=&#39;Norwich City FC&#39;)         : 0.77
 OffenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.94
-OffenceParameterKey(label=&#39;Watford FC&#39;)              : 0.78
-OffenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 0.89
-OffenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.27
-OffenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 0.87
-OffenceParameterKey(label=&#39;Swansea City FC&#39;)         : 0.82
-OffenceParameterKey(label=&#39;Norwich City FC&#39;)         : 0.77
+OffenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.15
 OffenceParameterKey(label=&#39;Leicester City FC&#39;)       : 1.31
-OffenceParameterKey(label=&#39;Stoke City FC&#39;)           : 0.81
 OffenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 0.94
+OffenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 1.33
 OffenceParameterKey(label=&#39;Manchester City FC&#39;)      : 1.38
-OffenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 0.54
-OffenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.23
-OffenceParameterKey(label=&#39;Everton FC&#39;)              : 1.16
 OffenceParameterKey(label=&#39;Southampton FC&#39;)          : 1.14
+OffenceParameterKey(label=&#39;Stoke City FC&#39;)           : 0.81
+OffenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 0.66
+OffenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 0.54
+OffenceParameterKey(label=&#39;Swansea City FC&#39;)         : 0.82
+OffenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.27
 OffenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 0.76
-DefenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.26
-DefenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 1.10
-DefenceParameterKey(label=&#39;Arsenal FC&#39;)              : 0.86
-DefenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 0.84
-DefenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.82
-DefenceParameterKey(label=&#39;Watford FC&#39;)              : 1.17
-DefenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 1.57
-DefenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.22
-DefenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 1.52
-DefenceParameterKey(label=&#39;Swansea City FC&#39;)         : 1.21
+OffenceParameterKey(label=&#39;Arsenal FC&#39;)              : 1.25
+OffenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 0.89
+OffenceParameterKey(label=&#39;Everton FC&#39;)              : 1.16
+OffenceParameterKey(label=&#39;Watford FC&#39;)              : 0.78
+OffenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.23
+OffenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 0.87
 DefenceParameterKey(label=&#39;Norwich City FC&#39;)         : 1.55
+DefenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.82
+DefenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.26
 DefenceParameterKey(label=&#39;Leicester City FC&#39;)       : 0.86
-DefenceParameterKey(label=&#39;Stoke City FC&#39;)           : 1.28
 DefenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 1.46
+DefenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 0.84
 DefenceParameterKey(label=&#39;Manchester City FC&#39;)      : 0.99
-DefenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 1.75
-DefenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.19
-DefenceParameterKey(label=&#39;Everton FC&#39;)              : 1.32
 DefenceParameterKey(label=&#39;Southampton FC&#39;)          : 0.97
+DefenceParameterKey(label=&#39;Stoke City FC&#39;)           : 1.28
+DefenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 1.10
+DefenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 1.75
+DefenceParameterKey(label=&#39;Swansea City FC&#39;)         : 1.21
+DefenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.22
 DefenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 1.19
+DefenceParameterKey(label=&#39;Arsenal FC&#39;)              : 0.86
+DefenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 1.57
+DefenceParameterKey(label=&#39;Everton FC&#39;)              : 1.32
+DefenceParameterKey(label=&#39;Watford FC&#39;)              : 1.17
+DefenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.19
+DefenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 1.52
 ParameterKey(label=&#39;Home-field advantage&#39;)           : 1.23
 ParameterKey(label=&#39;Rho&#39;)                            : 0.94
 </pre>
@@ -328,11 +329,7 @@ ParameterKey(label=&#39;Rho&#39;)                            : 0.94
     <span class="s1">&#39;team2&#39;</span><span class="p">:</span> <span class="s1">&#39;Swansea City FC&#39;</span><span class="p">,</span>
 <span class="p">})</span>
 
-<span class="n">home_win</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;probability&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scorelines</span> <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;home_goals&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;away_goals&#39;</span><span class="p">])</span>
-<span class="n">draw</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;probability&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scorelines</span> <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;home_goals&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;away_goals&#39;</span><span class="p">])</span>
-<span class="n">away_win</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;probability&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scorelines</span> <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;home_goals&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;away_goals&#39;</span><span class="p">])</span>
-
-<span class="n">home_win</span><span class="p">,</span> <span class="n">draw</span><span class="p">,</span> <span class="n">away_win</span>
+<span class="n">scorelines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -347,7 +344,48 @@ ParameterKey(label=&#39;Rho&#39;)                            : 0.94
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(0.66457992720784, 0.19833729305634218, 0.13708277973581875)</pre>
+<pre>[ScorelinePrediction(home_goals=0, away_goals=0, probability=0.05607098978860709),
+ ScorelinePrediction(home_goals=0, away_goals=1, probability=0.045632138210651055),
+ ScorelinePrediction(home_goals=0, away_goals=2, probability=0.01856835455844811),
+ ScorelinePrediction(home_goals=0, away_goals=3, probability=0.005037148590563076),
+ ScorelinePrediction(home_goals=0, away_goals=4, probability=0.0010248430674165848)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">outcomes</span> <span class="o">=</span> <span class="n">scorelines_to_outcomes</span><span class="p">(</span><span class="n">scorelines</span><span class="p">)</span>
+
+<span class="nb">list</span><span class="p">(</span><span class="n">outcomes</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[OutcomePrediction(outcome=Outcomes(Home win), probability=0.664579565201895),
+ OutcomePrediction(outcome=Outcomes(Draw), probability=0.1983374496050809),
+ OutcomePrediction(outcome=Outcomes(Away win), probability=0.13708298519302461)]</pre>
 </div>
 
 </div>
@@ -404,7 +442,9 @@ closer to the current date a bigger weight than those a long time ago.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">weight</span> <span class="o">=</span> <span class="n">ExponentialWeight</span><span class="p">(</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">season_end_date</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">pl_1516</span><span class="p">)</span>
+
+<span class="n">weight</span> <span class="o">=</span> <span class="n">ExponentialWeight</span><span class="p">(</span>
     <span class="c1"># Value of `epsilon` is taken from the original paper</span>
     <span class="n">epsilon</span><span class="o">=-</span><span class="mf">0.0065</span><span class="p">,</span>  
     <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">season_end_date</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">days</span>
@@ -425,9 +465,7 @@ closer to the current date a bigger weight than those a long time ago.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">season_end_date</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">pl_1516</span><span class="p">)</span>
-
-<span class="n">model_exp</span> <span class="o">=</span> <span class="n">DixonColes</span><span class="p">(</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model_exp</span> <span class="o">=</span> <span class="n">DixonColes</span><span class="p">(</span>
     <span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span>
     <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span>
     <span class="n">weight</span><span class="o">=</span><span class="n">weight</span>
@@ -447,7 +485,7 @@ closer to the current date a bigger weight than those a long time ago.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;mezzala.models.DixonColes at 0x12b3c8358&gt;</pre>
+<pre>&lt;mezzala.models.DixonColes at 0x11d522668&gt;</pre>
 </div>
 
 </div>
@@ -489,46 +527,46 @@ closer to the current date a bigger weight than those a long time ago.</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>OffenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.15 -&gt; 1.20 (1.04)
-OffenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 0.66 -&gt; 0.60 (0.91)
-OffenceParameterKey(label=&#39;Arsenal FC&#39;)              : 1.25 -&gt; 1.25 (1.00)
-OffenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 1.33 -&gt; 1.34 (1.01)
+<pre>OffenceParameterKey(label=&#39;Norwich City FC&#39;)         : 0.77 -&gt; 0.69 (0.90)
 OffenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.94 -&gt; 0.92 (0.98)
-OffenceParameterKey(label=&#39;Watford FC&#39;)              : 0.78 -&gt; 0.77 (0.99)
-OffenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 0.89 -&gt; 0.88 (0.99)
-OffenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.27 -&gt; 1.33 (1.04)
-OffenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 0.87 -&gt; 0.93 (1.08)
-OffenceParameterKey(label=&#39;Swansea City FC&#39;)         : 0.82 -&gt; 0.88 (1.08)
-OffenceParameterKey(label=&#39;Norwich City FC&#39;)         : 0.77 -&gt; 0.69 (0.90)
+OffenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.15 -&gt; 1.20 (1.04)
 OffenceParameterKey(label=&#39;Leicester City FC&#39;)       : 1.31 -&gt; 1.25 (0.95)
-OffenceParameterKey(label=&#39;Stoke City FC&#39;)           : 0.81 -&gt; 0.82 (1.01)
 OffenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 0.94 -&gt; 0.99 (1.05)
+OffenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 1.33 -&gt; 1.34 (1.01)
 OffenceParameterKey(label=&#39;Manchester City FC&#39;)      : 1.38 -&gt; 1.36 (0.98)
-OffenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 0.54 -&gt; 0.49 (0.91)
-OffenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.23 -&gt; 1.33 (1.08)
-OffenceParameterKey(label=&#39;Everton FC&#39;)              : 1.16 -&gt; 1.02 (0.88)
 OffenceParameterKey(label=&#39;Southampton FC&#39;)          : 1.14 -&gt; 1.26 (1.11)
+OffenceParameterKey(label=&#39;Stoke City FC&#39;)           : 0.81 -&gt; 0.82 (1.01)
+OffenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 0.66 -&gt; 0.60 (0.91)
+OffenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 0.54 -&gt; 0.49 (0.91)
+OffenceParameterKey(label=&#39;Swansea City FC&#39;)         : 0.82 -&gt; 0.88 (1.08)
+OffenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.27 -&gt; 1.33 (1.04)
 OffenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 0.76 -&gt; 0.70 (0.92)
-DefenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.26 -&gt; 1.16 (0.92)
-DefenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 1.10 -&gt; 1.04 (0.94)
-DefenceParameterKey(label=&#39;Arsenal FC&#39;)              : 0.86 -&gt; 0.85 (0.98)
-DefenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 0.84 -&gt; 0.95 (1.12)
-DefenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.82 -&gt; 0.83 (1.01)
-DefenceParameterKey(label=&#39;Watford FC&#39;)              : 1.17 -&gt; 1.33 (1.14)
-DefenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 1.57 -&gt; 1.61 (1.02)
-DefenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.22 -&gt; 1.33 (1.09)
-DefenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 1.52 -&gt; 1.37 (0.90)
-DefenceParameterKey(label=&#39;Swansea City FC&#39;)         : 1.21 -&gt; 1.18 (0.97)
+OffenceParameterKey(label=&#39;Arsenal FC&#39;)              : 1.25 -&gt; 1.25 (1.00)
+OffenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 0.89 -&gt; 0.88 (0.99)
+OffenceParameterKey(label=&#39;Everton FC&#39;)              : 1.16 -&gt; 1.02 (0.88)
+OffenceParameterKey(label=&#39;Watford FC&#39;)              : 0.78 -&gt; 0.77 (0.99)
+OffenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.23 -&gt; 1.33 (1.08)
+OffenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 0.87 -&gt; 0.93 (1.08)
 DefenceParameterKey(label=&#39;Norwich City FC&#39;)         : 1.55 -&gt; 1.51 (0.97)
+DefenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.82 -&gt; 0.83 (1.01)
+DefenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.26 -&gt; 1.16 (0.92)
 DefenceParameterKey(label=&#39;Leicester City FC&#39;)       : 0.86 -&gt; 0.68 (0.79)
-DefenceParameterKey(label=&#39;Stoke City FC&#39;)           : 1.28 -&gt; 1.42 (1.11)
 DefenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 1.46 -&gt; 1.22 (0.84)
+DefenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 0.84 -&gt; 0.95 (1.12)
 DefenceParameterKey(label=&#39;Manchester City FC&#39;)      : 0.99 -&gt; 1.00 (1.01)
-DefenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 1.75 -&gt; 1.83 (1.04)
-DefenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.19 -&gt; 1.18 (1.00)
-DefenceParameterKey(label=&#39;Everton FC&#39;)              : 1.32 -&gt; 1.33 (1.01)
 DefenceParameterKey(label=&#39;Southampton FC&#39;)          : 0.97 -&gt; 0.95 (0.98)
+DefenceParameterKey(label=&#39;Stoke City FC&#39;)           : 1.28 -&gt; 1.42 (1.11)
+DefenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 1.10 -&gt; 1.04 (0.94)
+DefenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 1.75 -&gt; 1.83 (1.04)
+DefenceParameterKey(label=&#39;Swansea City FC&#39;)         : 1.21 -&gt; 1.18 (0.97)
+DefenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.22 -&gt; 1.33 (1.09)
 DefenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 1.19 -&gt; 1.25 (1.05)
+DefenceParameterKey(label=&#39;Arsenal FC&#39;)              : 0.86 -&gt; 0.85 (0.98)
+DefenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 1.57 -&gt; 1.61 (1.02)
+DefenceParameterKey(label=&#39;Everton FC&#39;)              : 1.32 -&gt; 1.33 (1.01)
+DefenceParameterKey(label=&#39;Watford FC&#39;)              : 1.17 -&gt; 1.33 (1.14)
+DefenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.19 -&gt; 1.18 (1.00)
+DefenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 1.52 -&gt; 1.37 (0.90)
 ParameterKey(label=&#39;Home-field advantage&#39;)           : 1.23 -&gt; 1.30 (1.05)
 ParameterKey(label=&#39;Rho&#39;)                            : 0.94 -&gt; 0.91 (0.97)
 </pre>

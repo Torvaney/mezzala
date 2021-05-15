@@ -47,7 +47,151 @@ nb_path: "nbs/models.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DixonColes" class="doc_header"><code>class</code> <code>DixonColes</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/models.py#L21" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DixonColes</code>(<strong><code>adapter</code></strong>, <strong><code>blocks</code></strong>, <strong><code>weight</code></strong>=<em><code>&lt;mezzala.weights.UniformWeight object at 0x118bd2518&gt;</code></em>, <strong><code>params</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="ScorelinePrediction" class="doc_header"><code>class</code> <code>ScorelinePrediction</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/models.py#L25" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ScorelinePrediction</code>(<strong><code>home_goals</code></strong>:<code>int</code>, <strong><code>away_goals</code></strong>:<code>int</code>, <strong><code>probability</code></strong>:<code>float</code>)</p>
+</blockquote>
+<p>ScorelinePrediction(home_goals: int, away_goals: int, probability: float)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="Outcomes" class="doc_header"><code>Outcomes</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/models.py#L34" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Enum</code> = [HOME_WIN, DRAW, AWAY_WIN]</p>
+</blockquote>
+<p>An enumeration.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="OutcomePrediction" class="doc_header"><code>class</code> <code>OutcomePrediction</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/models.py#L44" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OutcomePrediction</code>(<strong><code>outcome</code></strong>:<a href="/mezzala/models.html#Outcomes"><code>Outcomes</code></a>, <strong><code>probability</code></strong>:<code>float</code>)</p>
+</blockquote>
+<p>OutcomePrediction(outcome: mezzala.models.Outcomes, probability: float)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="scoreline_to_outcome" class="doc_header"><code>scoreline_to_outcome</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/models.py#L51" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>scoreline_to_outcome</code>(<strong><code>home_goals</code></strong>, <strong><code>away_goals</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="scorelines_to_outcomes" class="doc_header"><code>scorelines_to_outcomes</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/models.py#L60" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>scorelines_to_outcomes</code>(<strong><code>scorelines</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="DixonColes" class="doc_header"><code>class</code> <code>DixonColes</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/models.py#L72" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DixonColes</code>(<strong><code>adapter</code></strong>, <strong><code>blocks</code></strong>, <strong><code>weight</code></strong>=<em><code>&lt;mezzala.weights.UniformWeight object at 0x1134f65c0&gt;</code></em>, <strong><code>params</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Dixon-Coles models in Python</p>
 
