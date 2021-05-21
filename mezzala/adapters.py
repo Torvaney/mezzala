@@ -110,8 +110,8 @@ class LumpedAdapter:
 
         def getter(row):
             value = getattr(self.base_adapter, key)(row)
-            placeholder, min_obs = self._term_lookup[key]
-            if self._counters[placeholder][value] < min_obs:
+            placeholder, min_obs = self._term_lookup.get(key, (None, None))
+            if placeholder and self._counters[placeholder][value] < min_obs:
                 return placeholder
             return value
         return getter

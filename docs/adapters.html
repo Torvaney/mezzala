@@ -424,8 +424,16 @@ the training data into a placeholder term</p>
     <span class="s1">&#39;ag&#39;</span><span class="p">:</span> <span class="mi">2</span>
 <span class="p">}</span>
 
+<span class="c1"># A team with more than the minimum number of observations appears as before</span>
 <span class="k">assert</span> <span class="n">lumped_dict_adapter</span><span class="o">.</span><span class="n">home_team</span><span class="p">(</span><span class="n">example_lumped_1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Team 1&#39;</span>
+
+<span class="c1"># But a team with fewer observations appears as the placeholder</span>
 <span class="k">assert</span> <span class="n">lumped_dict_adapter</span><span class="o">.</span><span class="n">away_team</span><span class="p">(</span><span class="n">example_lumped_1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Other team&#39;</span>
+
+<span class="c1"># Meanwhile, values without a placeholder in the LumpedAdapter</span>
+<span class="c1"># also appear as before</span>
+<span class="k">assert</span> <span class="n">lumped_dict_adapter</span><span class="o">.</span><span class="n">home_goals</span><span class="p">(</span><span class="n">example_lumped_1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">lumped_dict_adapter</span><span class="o">.</span><span class="n">away_goals</span><span class="p">(</span><span class="n">example_lumped_1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
 </pre></div>
 
     </div>
