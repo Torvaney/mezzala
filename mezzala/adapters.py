@@ -23,6 +23,10 @@ class KeyAdapter:
             **kwargs
         }
 
+    def __repr__(self):
+        args_repr = ', '.join(f'{k}={repr(v)}' for k, v in self._lookup.items())
+        return f'KeyAdapter({args_repr})'
+
     def _get_in(self, row, item):
         if isinstance(item, list):
             return functools.reduce(lambda d, i: d[i], item, row)
@@ -47,6 +51,10 @@ class AttributeAdapter:
             **kwargs
         }
 
+    def __repr__(self):
+        args_repr = ', '.join(f'{k}={repr(v)}' for k, v in self._lookup.items())
+        return f'KeyAdapter({args_repr})'
+
     def _get_in(self, row, item):
         if isinstance(item, list):
             return functools.reduce(getattr, item, row)
@@ -61,35 +69,44 @@ class AttributeAdapter:
 
 
 class LumpedAdapter:
-    """ Lump term values who appear below `min_observations` times (defaults to 10) into one term (`placeholder`)"""
+    """
+    Lump terms which have appeared below a minimum number of times in
+    the training data into a placeholder term
+    """
 
-    def __init__(self, base_adapter, data, placeholder, min_observations=10):
+    def __init__(self, base_adapter, data, **kwargs):
         self.base_adapter = base_adapter
-        self.min_matches = min_matches
-        self.placeholder = placeholder
 
-        self.match_count = None
-        self.train(data)
+        # Match terms to placeholders
+        # If multiple terms have the same placeholder (e.g. Home and Away
+        # teams) they will share a counter
+        self._term_lookup = kwargs
 
-    def home_team(self, row):
-        home_team = self.base_adapter.home_team(row)
-        if self.match_count[home_team] <= self.min_matches:
-            return self.placeholder
-        return home_team
+        self._counters = None
+        self.fit(data)
 
-    def away_team(self, row):
-        away_team = self.base_adapter.away_team(row)
-        if self.match_count[away_team] <= self.min_matches:
-            return self.placeholder
-        return away_team
-
-    def home_goals(self, row):
-        return self.base_adapter.home_goals(row)
-
-    def away_goals(self, row):
-        return self.base_adapter.away_goals(row)
+    def __repr__(self):
+        args_repr = ', '.join(f'{k}={repr(v)}' for k, v in self._term_lookup.items())
+        return f'LumpedAdapter(base_adapter={repr(self.base_adapter)}, {args_repr})'
 
     def fit(self, data):
-        home_match_count = collections.Counter(self.base_adapter.home_team(row) for row in data)
-        away_match_count = collections.Counter(self.base_adapter.away_team(row) for row in data)
-        self.match_count = home_match_count + away_match_count
+        self._counters = {}
+        for term, (placeholder, _) in self._term_lookup.items():
+            # Initialise with an empty counter if it doesn't already exist
+            # We need to do this so that multiple terms sharing the same counter
+            # (home and away teams) are shared
+            init_counter = self._counters.get(placeholder, collections.Counter())
+
+            counter = collections.Counter(getattr(self.base_adapter, term)(row) for row in data)
+
+            self._counters[placeholder] = init_counter + counter
+        return self
+
+    def __getattr__(self, key):
+        def getter(row):
+            value = getattr(self.base_adapter, key)(row)
+            placeholder, min_obs = self._term_lookup[key]
+            if self._counters[placeholder][value] < min_obs:
+                return placeholder
+            return value
+        return getter
