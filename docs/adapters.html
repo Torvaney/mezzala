@@ -338,7 +338,7 @@ in-built <code>csv</code> library)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LumpedAdapter" class="doc_header"><code>class</code> <code>LumpedAdapter</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/adapters.py#L71" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LumpedAdapter</code>(<strong><code>base_adapter</code></strong>, <strong><code>data</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="LumpedAdapter" class="doc_header"><code>class</code> <code>LumpedAdapter</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/adapters.py#L71" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LumpedAdapter</code>(<strong><code>base_adapter</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Lump terms which have appeared below a minimum number of times in
 the training data into a placeholder term</p>
@@ -379,10 +379,10 @@ the training data into a placeholder term</p>
 
 <span class="n">lumped_dict_adapter</span> <span class="o">=</span> <span class="n">LumpedAdapter</span><span class="p">(</span>
     <span class="n">base_adapter</span><span class="o">=</span><span class="n">dict_adapter</span><span class="p">,</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">example_lumped_data</span><span class="p">,</span>
     <span class="n">home_team</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Other team&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
     <span class="n">away_team</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Other team&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="p">)</span>
+<span class="n">lumped_dict_adapter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">example_lumped_data</span><span class="p">)</span>
 
 <span class="n">lumped_dict_adapter</span>
 </pre></div>

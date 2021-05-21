@@ -74,7 +74,7 @@ class LumpedAdapter:
     the training data into a placeholder term
     """
 
-    def __init__(self, base_adapter, data, **kwargs):
+    def __init__(self, base_adapter, **kwargs):
         self.base_adapter = base_adapter
 
         # Match terms to placeholders
@@ -83,7 +83,6 @@ class LumpedAdapter:
         self._term_lookup = kwargs
 
         self._counters = None
-        self.fit(data)
 
     def __repr__(self):
         args_repr = ', '.join(f'{k}={repr(v)}' for k, v in self._term_lookup.items())
@@ -103,6 +102,12 @@ class LumpedAdapter:
         return self
 
     def __getattr__(self, key):
+        if not self._counters:
+            raise ValueError(
+                'No counts found! You need to call `LumpedAdapter.fit` '
+                'on the training data before you can use it!'
+            )
+
         def getter(row):
             value = getattr(self.base_adapter, key)(row)
             placeholder, min_obs = self._term_lookup[key]
