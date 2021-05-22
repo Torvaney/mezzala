@@ -105,12 +105,12 @@ class DixonColes:
     def home_rate(self, params, row):
         """ Returns home goalscoring rate """
         terms = itertools.chain(*[b.home_terms(self.adapter, row) for b in self.blocks])
-        return np.exp(sum(params[t] for t in terms))
+        return sum(params[t] for t in terms)
 
     def away_rate(self, params, row):
         """ Returns away goalscoring rate """
         terms = itertools.chain(*[b.away_terms(self.adapter, row) for b in self.blocks])
-        return np.exp(sum(params[t] for t in terms))
+        return sum(params[t] for t in terms)
 
     # Core methods
 
@@ -135,23 +135,17 @@ class DixonColes:
             np.log(self._tau(home_goals, away_goals, home_rate, away_rate, rho))
         )
 
-    def objective_fn(self, data, param_keys, xs):
+    def objective_fn(self, data, home_goals, away_goals, weights, param_keys, xs):
         params = self._assign_params(param_keys, xs)
-
-        home_goals, away_goals = np.empty(len(data)), np.empty(len(data))
         home_rate, away_rate = np.empty(len(data)), np.empty(len(data))
-        weights = np.empty(len(data))
 
         # NOTE: Should data adapter define the iteration?
         # E.g. dataframe adapter?
         for i, row in enumerate(data):
-            home_goals[i] = self.home_goals(row)
-            away_goals[i] = self.away_goals(row)
             home_rate[i] = self.home_rate(params, row)
             away_rate[i] = self.away_rate(params, row)
-            weights[i] = self.weight(row)
 
-        log_like = self._log_like(home_goals, away_goals, home_rate, away_rate, params)
+        log_like = self._log_like(home_goals, away_goals, np.exp(home_rate), np.exp(away_rate), params)
 
         pseudo_log_like = log_like * weights
         return -np.sum(pseudo_log_like)
@@ -165,9 +159,19 @@ class DixonColes:
             else np.zeros(len(param_keys))
         )
 
+        # Pre-calculate what we can...
+        # NOTE: would be faster if we generated a parameter matrix and feature matrix at this step,
+        # and then just used matrix multiplication in the objective function...
+        home_goals, away_goals = np.empty(len(data)), np.empty(len(data))
+        weights = np.empty(len(data))
+        for i, row in enumerate(data):
+            home_goals[i] = self.home_goals(row)
+            away_goals[i] = self.away_goals(row)
+            weights[i] = self.weight(row)
+
         # Optimise!
         estimate = scipy.optimize.minimize(
-            lambda xs: self.objective_fn(data, param_keys, xs),
+            lambda xs: self.objective_fn(data, home_goals, away_goals, weights, param_keys, xs),
             x0=init_params,
             constraints=constraints,
             **kwargs
