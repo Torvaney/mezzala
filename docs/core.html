@@ -201,8 +201,7 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%prun</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">DixonColes</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">DixonColes</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">pl_1516</span><span class="p">)</span>
 
 <span class="c1"># All estimates should be valid numbers</span>
@@ -222,16 +221,115 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/ben/code/mezzala/mezzala/models.py:134: RuntimeWarning: invalid value encountered in log
+<pre>/Users/ben/code/mezzala/mezzala/models.py:144: RuntimeWarning: invalid value encountered in log
   np.log(self._tau(home_goals, away_goals, home_rate, away_rate, rho))
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's inspect the parameters a bit. First, let's look at the boring (non-team) ones:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_keys</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="n">param_key_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_keys</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_keys</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">TeamParameterKey</span><span class="p">):</span>
+        <span class="n">key_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">param_key_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key_str</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre> </pre>
+<pre>ParameterKey(label=&#39;Home-field advantage&#39;)           : 1.23
+ParameterKey(label=&#39;Rho&#39;)                            : 0.94
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And the team ones. Let's look at each team's attacking quality:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">teams</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_keys</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">TeamParameterKey</span><span class="p">)}</span>
+
+<span class="n">team_offence</span> <span class="o">=</span> <span class="p">[(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">OffenceParameterKey</span><span class="p">(</span><span class="n">t</span><span class="p">)]))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teams</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">team</span><span class="p">,</span> <span class="n">estimate</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">team_offence</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">team</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">estimate</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Manchester City FC: 1.38
+Tottenham Hotspur FC: 1.33
+Leicester City FC: 1.31
+West Ham United FC: 1.27
+Arsenal FC: 1.25
+Liverpool FC: 1.23
+Everton FC: 1.16
+Chelsea FC: 1.15
+Southampton FC: 1.14
+Manchester United FC: 0.94
+Sunderland AFC: 0.94
+AFC Bournemouth: 0.89
+Newcastle United FC: 0.87
+Swansea City FC: 0.82
+Stoke City FC: 0.81
+Watford FC: 0.78
+Norwich City FC: 0.77
+Crystal Palace FC: 0.76
+West Bromwich Albion FC: 0.66
+Aston Villa FC: 0.54
+</pre>
 </div>
 </div>
 
@@ -248,15 +346,45 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_keys</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="n">param_key_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_keys</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_keys</span><span class="p">:</span>
-    <span class="n">key_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">param_key_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key_str</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">team_defence</span> <span class="o">=</span> <span class="p">[(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">DefenceParameterKey</span><span class="p">(</span><span class="n">t</span><span class="p">)]))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teams</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">team</span><span class="p">,</span> <span class="n">estimate</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">team_defence</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">team</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">estimate</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Manchester United FC: 0.82
+Tottenham Hotspur FC: 0.84
+Leicester City FC: 0.86
+Arsenal FC: 0.86
+Southampton FC: 0.97
+Manchester City FC: 0.99
+West Bromwich Albion FC: 1.10
+Watford FC: 1.17
+Liverpool FC: 1.19
+Crystal Palace FC: 1.19
+Swansea City FC: 1.21
+West Ham United FC: 1.22
+Chelsea FC: 1.26
+Stoke City FC: 1.28
+Everton FC: 1.32
+Sunderland AFC: 1.46
+Newcastle United FC: 1.52
+Norwich City FC: 1.55
+AFC Bournemouth: 1.57
+Aston Villa FC: 1.75
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -289,6 +417,26 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[ScorelinePrediction(home_goals=0, away_goals=0, probability=0.05607092837866217),
+ ScorelinePrediction(home_goals=0, away_goals=1, probability=0.04563205481413752),
+ ScorelinePrediction(home_goals=0, away_goals=2, probability=0.01856830702443716),
+ ScorelinePrediction(home_goals=0, away_goals=3, probability=0.005037132006701332),
+ ScorelinePrediction(home_goals=0, away_goals=4, probability=0.0010248389427564438)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
     {% endraw %}
 
@@ -301,10 +449,32 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">outcomes</span> <span class="o">=</span> <span class="n">scorelines_to_outcomes</span><span class="p">(</span><span class="n">scorelines</span><span class="p">)</span>
 
+<span class="c1"># MCFC should have a better chance of beating Swansea</span>
+<span class="c1"># at home than Swansea do of winning away</span>
+<span class="k">assert</span> <span class="n">outcomes</span><span class="p">[</span><span class="n">Outcomes</span><span class="p">(</span><span class="s1">&#39;Home win&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">probability</span> <span class="o">&gt;</span> <span class="n">outcomes</span><span class="p">[</span><span class="n">Outcomes</span><span class="p">(</span><span class="s1">&#39;Away win&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">probability</span>
+
 <span class="nb">list</span><span class="p">(</span><span class="n">outcomes</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[OutcomePrediction(outcome=Outcomes(&#39;Home win&#39;), probability=0.6645800466289905),
+ OutcomePrediction(outcome=Outcomes(&#39;Draw&#39;), probability=0.19833724947005407),
+ OutcomePrediction(outcome=Outcomes(&#39;Away win&#39;), probability=0.137082703900956)]</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -392,6 +562,22 @@ closer to the current date a bigger weight than those a long time ago.</p>
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;mezzala.models.DixonColes at 0x129801c18&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
     {% endraw %}
 
@@ -417,6 +603,61 @@ closer to the current date a bigger weight than those a long time ago.</p>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>OffenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.94 -&gt; 0.92 (0.98)
+OffenceParameterKey(label=&#39;Swansea City FC&#39;)         : 0.82 -&gt; 0.88 (1.08)
+OffenceParameterKey(label=&#39;Everton FC&#39;)              : 1.16 -&gt; 1.02 (0.88)
+OffenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 1.33 -&gt; 1.34 (1.01)
+OffenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.15 -&gt; 1.20 (1.04)
+OffenceParameterKey(label=&#39;Arsenal FC&#39;)              : 1.25 -&gt; 1.25 (1.00)
+OffenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 0.87 -&gt; 0.93 (1.08)
+OffenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.23 -&gt; 1.33 (1.08)
+OffenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 0.54 -&gt; 0.49 (0.91)
+OffenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 0.66 -&gt; 0.60 (0.91)
+OffenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.27 -&gt; 1.33 (1.04)
+OffenceParameterKey(label=&#39;Manchester City FC&#39;)      : 1.38 -&gt; 1.36 (0.98)
+OffenceParameterKey(label=&#39;Watford FC&#39;)              : 0.78 -&gt; 0.77 (0.99)
+OffenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 0.76 -&gt; 0.70 (0.92)
+OffenceParameterKey(label=&#39;Leicester City FC&#39;)       : 1.31 -&gt; 1.25 (0.95)
+OffenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 0.94 -&gt; 0.99 (1.05)
+OffenceParameterKey(label=&#39;Stoke City FC&#39;)           : 0.81 -&gt; 0.82 (1.01)
+OffenceParameterKey(label=&#39;Norwich City FC&#39;)         : 0.77 -&gt; 0.69 (0.90)
+OffenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 0.89 -&gt; 0.88 (0.99)
+OffenceParameterKey(label=&#39;Southampton FC&#39;)          : 1.14 -&gt; 1.26 (1.11)
+DefenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.82 -&gt; 0.83 (1.01)
+DefenceParameterKey(label=&#39;Swansea City FC&#39;)         : 1.21 -&gt; 1.18 (0.97)
+DefenceParameterKey(label=&#39;Everton FC&#39;)              : 1.32 -&gt; 1.33 (1.01)
+DefenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 0.84 -&gt; 0.95 (1.12)
+DefenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.26 -&gt; 1.16 (0.92)
+DefenceParameterKey(label=&#39;Arsenal FC&#39;)              : 0.86 -&gt; 0.85 (0.98)
+DefenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 1.52 -&gt; 1.37 (0.90)
+DefenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.19 -&gt; 1.18 (1.00)
+DefenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 1.75 -&gt; 1.83 (1.04)
+DefenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 1.10 -&gt; 1.04 (0.94)
+DefenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.22 -&gt; 1.33 (1.09)
+DefenceParameterKey(label=&#39;Manchester City FC&#39;)      : 0.99 -&gt; 1.00 (1.01)
+DefenceParameterKey(label=&#39;Watford FC&#39;)              : 1.17 -&gt; 1.33 (1.14)
+DefenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 1.19 -&gt; 1.25 (1.05)
+DefenceParameterKey(label=&#39;Leicester City FC&#39;)       : 0.86 -&gt; 0.68 (0.79)
+DefenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 1.46 -&gt; 1.22 (0.84)
+DefenceParameterKey(label=&#39;Stoke City FC&#39;)           : 1.28 -&gt; 1.42 (1.11)
+DefenceParameterKey(label=&#39;Norwich City FC&#39;)         : 1.55 -&gt; 1.51 (0.97)
+DefenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 1.57 -&gt; 1.61 (1.02)
+DefenceParameterKey(label=&#39;Southampton FC&#39;)          : 0.97 -&gt; 0.95 (0.98)
+ParameterKey(label=&#39;Home-field advantage&#39;)           : 1.23 -&gt; 1.30 (1.05)
+ParameterKey(label=&#39;Rho&#39;)                            : 0.94 -&gt; 0.91 (0.97)
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 

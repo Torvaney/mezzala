@@ -75,6 +75,8 @@ class DixonColes:
     """
 
     def __init__(self, adapter, blocks, weight=mezzala.weights.UniformWeight(), params=None):
+        # NOTE: Should params be stored internally as separate lists of keys and values?
+        # Then `params` (the dict) can be a property?
         self.params = params
         self.adapter = adapter
         self.weight = weight
@@ -102,21 +104,29 @@ class DixonColes:
             list(itertools.chain(*[b.constraints(self.adapter, data) for b in self.blocks]))
         )
 
-    def home_rate(self, params, row):
-        """ Returns home goalscoring rate """
-        terms = itertools.chain(*[b.home_terms(self.adapter, row) for b in self.blocks])
-        return sum(params[t] for t in terms)
+    def _home_terms(self, row):
+        return list(itertools.chain(*[b.home_terms(self.adapter, row) for b in self.blocks]))
 
-    def away_rate(self, params, row):
-        """ Returns away goalscoring rate """
-        terms = itertools.chain(*[b.away_terms(self.adapter, row) for b in self.blocks])
-        return sum(params[t] for t in terms)
+    def _away_terms(self, row):
+        return list(itertools.chain(*[b.away_terms(self.adapter, row) for b in self.blocks]))
 
     # Core methods
 
     @staticmethod
     def _assign_params(param_keys, param_values):
         return dict(zip(param_keys, param_values))
+
+    def _create_feature_matrices(self, param_keys, data):
+        """ Create X (feature) matrices for home and away poisson rates """
+        home_X = np.empty([len(data), len(param_keys)])
+        away_X = np.empty([len(data), len(param_keys)])
+        for row_i, row in enumerate(data):
+            home_rate_terms = self._home_terms(row)
+            away_rate_terms = self._away_terms(row)
+            for param_i, param in enumerate(param_keys):
+                home_X[row_i, param_i] = 1 if param in home_rate_terms else 0
+                away_X[row_i, param_i] = 1 if param in away_rate_terms else 0
+        return home_X, away_X
 
     @staticmethod
     def _tau(home_goals, away_goals, home_rate, away_rate, rho):
@@ -127,26 +137,22 @@ class DixonColes:
         tau = np.where((home_goals == 1) & (away_goals == 1), 1 - rho, tau)
         return tau
 
-    def _log_like(self, home_goals, away_goals, home_rate, away_rate, params):
-        rho = params[mezzala.parameters.RHO_KEY]
+    def _log_like(self, home_goals, away_goals, home_rate, away_rate, rho):
         return (
             scipy.stats.poisson.logpmf(home_goals, home_rate) +
             scipy.stats.poisson.logpmf(away_goals, away_rate) +
             np.log(self._tau(home_goals, away_goals, home_rate, away_rate, rho))
         )
 
-    def objective_fn(self, data, home_goals, away_goals, weights, param_keys, xs):
-        params = self._assign_params(param_keys, xs)
-        home_rate, away_rate = np.empty(len(data)), np.empty(len(data))
+    def objective_fn(self, data, home_goals, away_goals, weights, home_X, away_X, rho_ix, xs):
+        rho = xs[rho_ix]
 
-        # NOTE: Should data adapter define the iteration?
-        # E.g. dataframe adapter?
-        for i, row in enumerate(data):
-            home_rate[i] = self.home_rate(params, row)
-            away_rate[i] = self.away_rate(params, row)
+        # Parameters are estimated in log-space, but `scipy.stats.poisson`
+        # expects real number inputs, so we have to use `np.exp`
+        home_rate = np.exp(np.dot(home_X, xs))
+        away_rate = np.exp(np.dot(away_X, xs))
 
-        log_like = self._log_like(home_goals, away_goals, np.exp(home_rate), np.exp(away_rate), params)
-
+        log_like = self._log_like(home_goals, away_goals, home_rate, away_rate, rho)
         pseudo_log_like = log_like * weights
         return -np.sum(pseudo_log_like)
 
@@ -154,14 +160,20 @@ class DixonColes:
         param_keys, constraints = self.parse_params(data)
 
         init_params = (
+            # Attempt to initialise parameters from any already-existing parameters
+            # This substantially speeds up fitting during (e.g.) backtesting
             np.asarray([self.params.get(p, 0) for p in param_keys])
+            # If the model has no parameters, just initialise with 0s
             if self.params
             else np.zeros(len(param_keys))
         )
 
-        # Pre-calculate what we can...
-        # NOTE: would be faster if we generated a parameter matrix and feature matrix at this step,
-        # and then just used matrix multiplication in the objective function...
+        # Precalculate the things we can (for speed)
+
+        # Create X (feature) matrices for home and away poisson rates
+        home_X, away_X = self._create_feature_matrices(param_keys, data)
+
+        # Get home goals, away goals, and weights from the data
         home_goals, away_goals = np.empty(len(data)), np.empty(len(data))
         weights = np.empty(len(data))
         for i, row in enumerate(data):
@@ -169,9 +181,12 @@ class DixonColes:
             away_goals[i] = self.away_goals(row)
             weights[i] = self.weight(row)
 
+        # Get the index of the Rho correlation parameter
+        rho_ix = param_keys.index(mezzala.parameters.RHO_KEY)
+
         # Optimise!
         estimate = scipy.optimize.minimize(
-            lambda xs: self.objective_fn(data, home_goals, away_goals, weights, param_keys, xs),
+            lambda xs: self.objective_fn(data, home_goals, away_goals, weights, home_X, away_X, rho_ix, xs),
             x0=init_params,
             constraints=constraints,
             **kwargs
@@ -187,11 +202,17 @@ class DixonColes:
 
         home_goals = [h for h, a in scorelines]
         away_goals = [a for h, a in scorelines]
-        home_rate = self.home_rate(self.params, row)
-        away_rate = self.away_rate(self.params, row)
 
-        probs = np.exp(self._log_like(home_goals, away_goals, home_rate, away_rate, self.params))
+        param_keys = self.params.keys()
+        param_values = np.asarray([v for v in self.params.values()])
 
+        home_X, away_X = self._create_feature_matrices(param_keys, [row])
+
+        home_rate = np.exp(np.dot(home_X, param_values))
+        away_rate = np.exp(np.dot(away_X, param_values))
+        rho = self.params[mezzala.parameters.RHO_KEY]
+
+        probs = np.exp(self._log_like(home_goals, away_goals, home_rate, away_rate, rho))
         return [ScorelinePrediction(*vals) for vals in zip(home_goals, away_goals, probs)]
 
     def predict(self, data, up_to=26):
