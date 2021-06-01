@@ -49,7 +49,9 @@ nb_path: "nbs/blocks.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="BaseRate" class="doc_header"><code>class</code> <code>BaseRate</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L36" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BaseRate</code>() :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
 </blockquote>
-<p>Base class for model blocks</p>
+<p>Estimate average goalscoring rate as a separate parameter.</p>
+<p>This can be useful, since it results in both team offence and
+team defence parameters being centered around 1.0</p>
 
 </div>
 
@@ -79,9 +81,11 @@ nb_path: "nbs/blocks.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="HomeAdvantage" class="doc_header"><code>class</code> <code>HomeAdvantage</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L52" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>HomeAdvantage</code>() :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
+<h2 id="HomeAdvantage" class="doc_header"><code>class</code> <code>HomeAdvantage</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L62" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>HomeAdvantage</code>() :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
 </blockquote>
-<p>Base class for model blocks</p>
+<p>Estimate home advantage.</p>
+<p>Assumes constant home advantage is present in every match in the
+dataset</p>
 
 </div>
 
@@ -111,9 +115,9 @@ nb_path: "nbs/blocks.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TeamStrength" class="doc_header"><code>class</code> <code>TeamStrength</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L66" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TeamStrength</code>() :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
+<h2 id="TeamStrength" class="doc_header"><code>class</code> <code>TeamStrength</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L86" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TeamStrength</code>() :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
 </blockquote>
-<p>Base class for model blocks</p>
+<p>Estimate team offence and team defence parameters.</p>
 
 </div>
 
@@ -143,7 +147,7 @@ nb_path: "nbs/blocks.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="KeyBlock" class="doc_header"><code>class</code> <code>KeyBlock</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L115" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>KeyBlock</code>(<strong><code>key</code></strong>) :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
+<h2 id="KeyBlock" class="doc_header"><code>class</code> <code>KeyBlock</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L143" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>KeyBlock</code>(<strong><code>key</code></strong>) :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
 </blockquote>
 <p>Generic model block for adding arbitrary model terms from the data
 to both home and away team</p>
@@ -176,7 +180,7 @@ to both home and away team</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ConstantBlock" class="doc_header"><code>class</code> <code>ConstantBlock</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L135" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConstantBlock</code>(<strong>*<code>args</code></strong>) :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
+<h2 id="ConstantBlock" class="doc_header"><code>class</code> <code>ConstantBlock</code><a href="https://github.com/Torvaney/mezzala/tree/master/mezzala/blocks.py#L166" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConstantBlock</code>(<strong>*<code>args</code></strong>) :: <a href="/mezzala/blocks.html#ModelBlockABC"><code>ModelBlockABC</code></a></p>
 </blockquote>
 <p>A model block for adding specific model terms to the parameter keys.</p>
 <p>Can be useful in conjunction with <a href="/mezzala/adapters.html#LumpedAdapter"><code>LumpedAdapter</code></a> to ensure that certain parameters

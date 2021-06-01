@@ -34,8 +34,18 @@ class ModelBlockABC(abc.ABC):
 
 
 class BaseRate(ModelBlockABC):
+    """
+    Estimate average goalscoring rate as a separate parameter.
+
+    This can be useful, since it results in both team offence and
+    team defence parameters being centered around 1.0
+    """
+
     def __init__(self):
         pass
+
+    def __repr__(self):
+        return 'BaseRate()'
 
     def param_keys(self, adapter, data):
         return [mezzala.parameters.AVG_KEY]
@@ -50,9 +60,19 @@ class BaseRate(ModelBlockABC):
 
 
 class HomeAdvantage(ModelBlockABC):
+    """
+    Estimate home advantage.
+
+    Assumes constant home advantage is present in every match in the
+    dataset
+    """
+
     def __init__(self):
         # TODO: allow HFA on/off depending on the data?
         pass
+
+    def __repr__(self):
+        return 'HomeAdvantage()'
 
     def param_keys(self, adapter, data):
         return [mezzala.parameters.HFA_KEY]
@@ -64,6 +84,11 @@ class HomeAdvantage(ModelBlockABC):
 
 
 class TeamStrength(ModelBlockABC):
+    """
+    Estimate team offence and team defence parameters.
+    """
+
+
     # This is a gross hack so that we know that the
     # team strength parameters come first, and thus can
     # do the constraints (which are positionally indexed)
@@ -71,6 +96,9 @@ class TeamStrength(ModelBlockABC):
 
     def __init__(self):
         pass
+
+    def __repr__(self):
+        return 'TeamStrength()'
 
     def _teams(self, adapter, data):
         return set(adapter.home_team(r) for r in data) | set(adapter.away_team(r) for r in data)
@@ -120,6 +148,9 @@ class KeyBlock(ModelBlockABC):
     def __init__(self, key):
         self.key = key
 
+    def __repr__(self):
+        return 'KeyBlock()'
+
     def param_keys(self, adapter, data):
         return list(set(self.key(r) for r in data))
 
@@ -141,6 +172,9 @@ class ConstantBlock(ModelBlockABC):
     """
     def __init__(self, *args):
         self.terms = args
+
+    def __repr__(self):
+        return 'ConstantBlock()'
 
     def param_keys(self, adapter, data):
         return list(self.terms)

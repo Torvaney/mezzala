@@ -37,7 +37,7 @@ nb_path: "nbs/index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>pip install your_project_name</code></p>
+<p><code>pip install mezzala</code></p>
 
 </div>
 </div>
@@ -48,9 +48,33 @@ nb_path: "nbs/index.ipynb"
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">mezzala</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Fill me in please! Don't forget code examples:</p>
+<p>Fitting a Dixon-Coles team strength model:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First, we need to get some data</p>
 
 </div>
 </div>
@@ -62,7 +86,22 @@ nb_path: "nbs/index.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+
+
+<span class="c1"># Use 2016/17 Premier League data from the openfootball repo</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json&#39;</span>
+
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">data_raw</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="c1"># Reshape the data to just get the matches</span>
+<span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;matches&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data_raw</span><span class="p">[</span><span class="s1">&#39;rounds&#39;</span><span class="p">]]))</span>
+
+<span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -77,7 +116,18 @@ nb_path: "nbs/index.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>2</pre>
+<pre>[{&#39;date&#39;: &#39;2016-08-13&#39;,
+  &#39;team1&#39;: &#39;Hull City AFC&#39;,
+  &#39;team2&#39;: &#39;Leicester City FC&#39;,
+  &#39;score&#39;: {&#39;ft&#39;: [2, 1]}},
+ {&#39;date&#39;: &#39;2016-08-13&#39;,
+  &#39;team1&#39;: &#39;Everton FC&#39;,
+  &#39;team2&#39;: &#39;Tottenham Hotspur FC&#39;,
+  &#39;score&#39;: {&#39;ft&#39;: [1, 1]}},
+ {&#39;date&#39;: &#39;2016-08-13&#39;,
+  &#39;team1&#39;: &#39;Crystal Palace FC&#39;,
+  &#39;team2&#39;: &#39;West Bromwich Albion FC&#39;,
+  &#39;score&#39;: {&#39;ft&#39;: [0, 1]}}]</pre>
 </div>
 
 </div>
@@ -88,6 +138,346 @@ nb_path: "nbs/index.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Fitting-a-model">Fitting a model<a class="anchor-link" href="#Fitting-a-model"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To fit a model with mezzala, you need to create an "adapter". Adapters are used to connect a model to a data source.</p>
+<p>Because our data is a list of dicts, we are going to use a <a href="/mezzala/adapters.html#KeyAdapter"><code>KeyAdapter</code></a>.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">adapter</span> <span class="o">=</span> <span class="n">mezzala</span><span class="o">.</span><span class="n">KeyAdapter</span><span class="p">(</span>       <span class="c1"># `KeyAdapter` = datum[&#39;...&#39;]</span>
+    <span class="n">home_team</span><span class="o">=</span><span class="s1">&#39;team1&#39;</span><span class="p">,</span>
+    <span class="n">away_team</span><span class="o">=</span><span class="s1">&#39;team2&#39;</span><span class="p">,</span>
+    <span class="n">home_goals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="s1">&#39;ft&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Get nested fields with lists of fields</span>
+    <span class="n">away_goals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="s1">&#39;ft&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># i.e. datum[&#39;score&#39;][&#39;ft&#39;][1]</span>
+<span class="p">)</span>
+
+<span class="c1"># You&#39;ll never need to call the methods on an </span>
+<span class="c1"># adapter directly, but just to show that it </span>
+
+<span class="c1"># works as expected:</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">home_team</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Hull City AFC&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Once we have an adapter for our specific data source, we can fit the model:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">mezzala</span><span class="o">.</span><span class="n">DixonColes</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>DixonColes(adapter=KeyAdapter(home_goals=[&#39;score&#39;, &#39;ft&#39;, 0], away_goals=[&#39;score&#39;, &#39;ft&#39;, 1], home_team=&#39;team1&#39;, away_team=&#39;team2&#39;), blocks=[TeamStrength(), BaseRate(), HomeAdvantage()])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Making-predictions">Making predictions<a class="anchor-link" href="#Making-predictions"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>By default, you only need to supply the home and away team to get predictions. This should be supplied in the same format as the training data.</p>
+<p><a href="/mezzala/models.html#DixonColes"><code>DixonColes</code></a> has two methods for making predictions:</p>
+<ul>
+<li><code>predict_one</code> - for predicting a single match</li>
+<li><code>predict</code> - for predicting multiple matches</li>
+</ul>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">match_to_predict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;team1&#39;</span><span class="p">:</span> <span class="s1">&#39;Manchester City FC&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;team2&#39;</span><span class="p">:</span> <span class="s1">&#39;Swansea City FC&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">scorelines</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_one</span><span class="p">(</span><span class="n">match_to_predict</span><span class="p">)</span>
+
+<span class="n">scorelines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[ScorelinePrediction(home_goals=0, away_goals=0, probability=0.02037042831596072),
+ ScorelinePrediction(home_goals=0, away_goals=1, probability=0.015935207480444896),
+ ScorelinePrediction(home_goals=0, away_goals=2, probability=0.006232830098272064),
+ ScorelinePrediction(home_goals=0, away_goals=3, probability=0.0016252553172631187),
+ ScorelinePrediction(home_goals=0, away_goals=4, probability=0.0003178477679454554)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Each of these methods return predictions in the form of <code>ScorelinePredictions</code>.</p>
+<ul>
+<li><code>predict_one</code> returns a list of <code>ScorelinePredictions</code></li>
+<li><code>predict</code> returns a list of <code>ScorelinePredictions</code> for each predicted match (i.e. a list of lists)</li>
+</ul>
+<p>However, it can sometimes be more useful to have predictions in the form of match <em>outcomes</em>. Mezzala exposes the <a href="/mezzala/models.html#scorelines_to_outcomes"><code>scorelines_to_outcomes</code></a> function for this purpose:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mezzala</span><span class="o">.</span><span class="n">scorelines_to_outcomes</span><span class="p">(</span><span class="n">scorelines</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{Outcomes(&#39;Home win&#39;): OutcomePrediction(outcome=Outcomes(&#39;Home win&#39;), probability=0.828760979161171),
+ Outcomes(&#39;Draw&#39;): OutcomePrediction(outcome=Outcomes(&#39;Draw&#39;), probability=0.1096502468599919),
+ Outcomes(&#39;Away win&#39;): OutcomePrediction(outcome=Outcomes(&#39;Away win&#39;), probability=0.061588773978835644)}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Extending-the-model">Extending the model<a class="anchor-link" href="#Extending-the-model"> </a></h3><p>It's possible to fit more sophisticated models with mezzala, using <strong>weights</strong> and <strong>model blocks</strong></p>
+<h4 id="Weights">Weights<a class="anchor-link" href="#Weights"> </a></h4><p>You can weight individual data points by supplying a function (or callable) to the <code>weight</code> argument to <a href="/mezzala/models.html#DixonColes"><code>DixonColes</code></a>:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mezzala</span><span class="o">.</span><span class="n">DixonColes</span><span class="p">(</span>
+    <span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span>
+    <span class="c1"># By default, all data points are weighted equally,</span>
+    <span class="c1"># which is equivalent to:</span>
+    <span class="n">weight</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>DixonColes(adapter=KeyAdapter(home_goals=[&#39;score&#39;, &#39;ft&#39;, 0], away_goals=[&#39;score&#39;, &#39;ft&#39;, 1], home_team=&#39;team1&#39;, away_team=&#39;team2&#39;), blocks=[TeamStrength(), BaseRate(), HomeAdvantage()])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Mezzala also provides an <a href="/mezzala/weights.html#ExponentialWeight"><code>ExponentialWeight</code></a> for the purpose of time-discounting:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mezzala</span><span class="o">.</span><span class="n">DixonColes</span><span class="p">(</span>
+    <span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span>
+    <span class="n">weight</span><span class="o">=</span><span class="n">mezzala</span><span class="o">.</span><span class="n">ExponentialWeight</span><span class="p">(</span>
+        <span class="n">epsilon</span><span class="o">=-</span><span class="mf">0.0065</span><span class="p">,</span>               <span class="c1"># Decay rate</span>
+        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;days_ago&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Model-blocks">Model blocks<a class="anchor-link" href="#Model-blocks"> </a></h4><p>Model "blocks" define the calculation and estimation of home and away goalscoring rates.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mezzala</span><span class="o">.</span><span class="n">DixonColes</span><span class="p">(</span>
+    <span class="n">adapter</span><span class="o">=</span><span class="n">adapter</span><span class="p">,</span>
+    <span class="c1"># By default, only team strength and home advantage,</span>
+    <span class="c1"># is estimated:</span>
+    <span class="n">blocks</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">mezzala</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">HomeAdvantage</span><span class="p">(),</span>
+        <span class="n">mezzala</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">TeamStrength</span><span class="p">(),</span>
+        <span class="n">mezzala</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">BaseRate</span><span class="p">(),</span>      <span class="c1"># Adds &quot;average goalscoring rate&quot; as a distinct parameter</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>DixonColes(adapter=KeyAdapter(home_goals=[&#39;score&#39;, &#39;ft&#39;, 0], away_goals=[&#39;score&#39;, &#39;ft&#39;, 1], home_team=&#39;team1&#39;, away_team=&#39;team2&#39;), blocks=[TeamStrength(), HomeAdvantage(), BaseRate()])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To add custom parameters (e.g. per-league home advantage), you need to add additional model blocks.</p>
+
+</div>
+</div>
+</div>
 </div>
  
 

@@ -379,7 +379,10 @@ the training data into a placeholder term</p>
 
 <span class="n">lumped_dict_adapter</span> <span class="o">=</span> <span class="n">LumpedAdapter</span><span class="p">(</span>
     <span class="n">base_adapter</span><span class="o">=</span><span class="n">dict_adapter</span><span class="p">,</span>
-    <span class="n">home_team</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Other team&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">home_team</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Other team&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>      <span class="c1"># Because `home_team` and `away_team` share the same</span>
+                                      <span class="c1"># placeholder value (&#39;Other team&#39;), they are counted</span>
+                                      <span class="c1"># together. I.e. a team has to appear at least 5 times</span>
+                                      <span class="c1"># as _either_ the home team, or the away team</span>
     <span class="n">away_team</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Other team&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">lumped_dict_adapter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">example_lumped_data</span><span class="p">)</span>

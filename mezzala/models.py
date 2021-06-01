@@ -10,11 +10,13 @@ import enum
 import functools
 import itertools
 import typing
+import warnings
 
 import numpy as np
 import scipy.stats
 import scipy.optimize
 
+import mezzala.blocks
 import mezzala.weights
 import mezzala.parameters
 
@@ -68,19 +70,28 @@ def scorelines_to_outcomes(scorelines):
 
 # Cell
 
+_DEFAULT_BLOCKS = [
+    mezzala.blocks.BaseRate(),
+    mezzala.blocks.HomeAdvantage(),
+    mezzala.blocks.TeamStrength(),
+]
+
 
 class DixonColes:
     """
     Dixon-Coles models in Python
     """
 
-    def __init__(self, adapter, blocks, weight=mezzala.weights.UniformWeight(), params=None):
+    def __init__(self, adapter, blocks=_DEFAULT_BLOCKS, weight=mezzala.weights.UniformWeight(), params=None):
         # NOTE: Should params be stored internally as separate lists of keys and values?
         # Then `params` (the dict) can be a property?
         self.params = params
         self.adapter = adapter
         self.weight = weight
         self._blocks = blocks
+
+    def __repr__(self):
+        return f'DixonColes(adapter={repr(self.adapter)}, blocks={repr([b for b in self.blocks])}), weight={repr(weight)}'
 
     @property
     def blocks(self):
@@ -130,11 +141,13 @@ class DixonColes:
 
     @staticmethod
     def _tau(home_goals, away_goals, home_rate, away_rate, rho):
+
         tau = np.ones(len(home_goals))
         tau = np.where((home_goals == 0) & (away_goals == 0), 1 - home_rate*away_rate*rho, tau)
         tau = np.where((home_goals == 0) & (away_goals == 1), 1 + home_rate*rho, tau)
         tau = np.where((home_goals == 1) & (away_goals == 0), 1 + away_rate*rho, tau)
         tau = np.where((home_goals == 1) & (away_goals == 1), 1 - rho, tau)
+
         return tau
 
     def _log_like(self, home_goals, away_goals, home_rate, away_rate, rho):
@@ -185,12 +198,20 @@ class DixonColes:
         rho_ix = param_keys.index(mezzala.parameters.RHO_KEY)
 
         # Optimise!
-        estimate = scipy.optimize.minimize(
-            lambda xs: self.objective_fn(data, home_goals, away_goals, weights, home_X, away_X, rho_ix, xs),
-            x0=init_params,
-            constraints=constraints,
-            **kwargs
-        )
+        with warnings.catch_warnings():
+            # This is a hack
+            # Because we haven't properly constrained `rho`, it's possible for 0 or even negative
+            # values of `tau` (and therefore invalid probabilities)
+            # Ignoring the warnings has little practical impact, since the model
+            # will still find the objective function's minimum point regardless
+            warnings.simplefilter('ignore')
+
+            estimate = scipy.optimize.minimize(
+                lambda xs: self.objective_fn(data, home_goals, away_goals, weights, home_X, away_X, rho_ix, xs),
+                x0=init_params,
+                constraints=constraints,
+                **kwargs
+            )
 
         # Parse the estimates into parameter map
         self.params = self._assign_params(param_keys, estimate.x)
