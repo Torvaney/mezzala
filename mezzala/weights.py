@@ -12,6 +12,9 @@ class UniformWeight:
     """
     Weight all observations equally
     """
+    def __repr__(self):
+        return f'UniformWeight()'
+
     @staticmethod
     def __call__(row):
         return 1.0
@@ -27,6 +30,9 @@ class ExponentialWeight:
         self.epsilon = epsilon
         self.key = key
 
+    def __repr__(self):
+        return f'ExponentialWeight(epsilon={self.epsilon}, key={self.key})'
+
     def __call__(self, row):
         return np.exp(self.epsilon*self.key(row))
 
@@ -39,6 +45,9 @@ class KeyWeight:
     """
     def __init__(self, key):
         self.key = key
+
+    def __repr__(self):
+        return f'KeyWeight(key={self.key})'
 
     def __call__(self, row):
         return self.key(row)

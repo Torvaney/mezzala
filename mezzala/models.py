@@ -91,7 +91,7 @@ class DixonColes:
         self._blocks = blocks
 
     def __repr__(self):
-        return f'DixonColes(adapter={repr(self.adapter)}, blocks={repr([b for b in self.blocks])}), weight={repr(weight)}'
+        return f'DixonColes(adapter={repr(self.adapter)}, blocks={repr([b for b in self.blocks])}), weight={repr(self.weight)}'
 
     @property
     def blocks(self):
