@@ -215,21 +215,6 @@ as well as home advantage <a href="/mezzala/blocks.html#HomeAdvantage"><code>Hom
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/ben/code/mezzala/mezzala/models.py:154: RuntimeWarning: invalid value encountered in log
-  np.log(self._tau(home_goals, away_goals, home_rate, away_rate, rho))
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -411,7 +396,10 @@ Aston Villa FC: 1.75
 <span class="p">})</span>
 
 <span class="c1"># Probabilities should sum to 1</span>
-<span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">probability</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">scorelines</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span>
+    <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">probability</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">scorelines</span><span class="p">),</span>
+    <span class="mf">1.0</span>
+<span class="p">)</span>
 
 <span class="n">scorelines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
@@ -428,11 +416,11 @@ Aston Villa FC: 1.75
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[ScorelinePrediction(home_goals=0, away_goals=0, probability=0.0560708907850427),
- ScorelinePrediction(home_goals=0, away_goals=1, probability=0.04563225584125621),
- ScorelinePrediction(home_goals=0, away_goals=2, probability=0.01856848307569004),
- ScorelinePrediction(home_goals=0, away_goals=3, probability=0.005037205333169376),
- ScorelinePrediction(home_goals=0, away_goals=4, probability=0.0010248590635439027)]</pre>
+<pre>[ScorelinePrediction(home_goals=0, away_goals=0, probability=0.05607098119573087),
+ ScorelinePrediction(home_goals=0, away_goals=1, probability=0.045632172429469826),
+ ScorelinePrediction(home_goals=0, away_goals=2, probability=0.01856838525229347),
+ ScorelinePrediction(home_goals=0, away_goals=3, probability=0.005037161466295112),
+ ScorelinePrediction(home_goals=0, away_goals=4, probability=0.0010248466126474723)]</pre>
 </div>
 
 </div>
@@ -460,24 +448,6 @@ Aston Villa FC: 1.75
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[OutcomePrediction(outcome=Outcomes(&#39;Home win&#39;), probability=0.6645783484677017),
- OutcomePrediction(outcome=Outcomes(&#39;Draw&#39;), probability=0.19833779465013804),
- OutcomePrediction(outcome=Outcomes(&#39;Away win&#39;), probability=0.13708385688216052)]</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -565,22 +535,6 @@ closer to the current date a bigger weight than those a long time ago.</p>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>DixonColes(adapter=KeyAdapter(home_goals=[&#39;score&#39;, &#39;ft&#39;, 0], away_goals=[&#39;score&#39;, &#39;ft&#39;, 1], home_team=&#39;team1&#39;, away_team=&#39;team2&#39;), blocks=[TeamStrength(), HomeAdvantage()])</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -606,61 +560,6 @@ closer to the current date a bigger weight than those a long time ago.</p>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>OffenceParameterKey(label=&#39;Everton FC&#39;)              : 1.16 -&gt; 1.02 (0.88)
-OffenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.94 -&gt; 0.92 (0.98)
-OffenceParameterKey(label=&#39;Stoke City FC&#39;)           : 0.81 -&gt; 0.82 (1.01)
-OffenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.27 -&gt; 1.33 (1.04)
-OffenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 0.66 -&gt; 0.60 (0.91)
-OffenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 1.33 -&gt; 1.34 (1.01)
-OffenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.23 -&gt; 1.33 (1.08)
-OffenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.15 -&gt; 1.20 (1.04)
-OffenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 0.54 -&gt; 0.49 (0.91)
-OffenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 0.94 -&gt; 0.99 (1.05)
-OffenceParameterKey(label=&#39;Southampton FC&#39;)          : 1.14 -&gt; 1.26 (1.11)
-OffenceParameterKey(label=&#39;Manchester City FC&#39;)      : 1.38 -&gt; 1.36 (0.98)
-OffenceParameterKey(label=&#39;Swansea City FC&#39;)         : 0.82 -&gt; 0.88 (1.08)
-OffenceParameterKey(label=&#39;Leicester City FC&#39;)       : 1.31 -&gt; 1.25 (0.95)
-OffenceParameterKey(label=&#39;Arsenal FC&#39;)              : 1.25 -&gt; 1.25 (1.00)
-OffenceParameterKey(label=&#39;Watford FC&#39;)              : 0.78 -&gt; 0.77 (0.99)
-OffenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 0.89 -&gt; 0.88 (0.99)
-OffenceParameterKey(label=&#39;Norwich City FC&#39;)         : 0.77 -&gt; 0.69 (0.90)
-OffenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 0.87 -&gt; 0.93 (1.08)
-OffenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 0.76 -&gt; 0.70 (0.92)
-DefenceParameterKey(label=&#39;Everton FC&#39;)              : 1.32 -&gt; 1.33 (1.01)
-DefenceParameterKey(label=&#39;Manchester United FC&#39;)    : 0.82 -&gt; 0.83 (1.01)
-DefenceParameterKey(label=&#39;Stoke City FC&#39;)           : 1.28 -&gt; 1.42 (1.11)
-DefenceParameterKey(label=&#39;West Ham United FC&#39;)      : 1.22 -&gt; 1.33 (1.09)
-DefenceParameterKey(label=&#39;West Bromwich Albion FC&#39;) : 1.10 -&gt; 1.04 (0.94)
-DefenceParameterKey(label=&#39;Tottenham Hotspur FC&#39;)    : 0.84 -&gt; 0.95 (1.12)
-DefenceParameterKey(label=&#39;Liverpool FC&#39;)            : 1.19 -&gt; 1.18 (1.00)
-DefenceParameterKey(label=&#39;Chelsea FC&#39;)              : 1.26 -&gt; 1.16 (0.92)
-DefenceParameterKey(label=&#39;Aston Villa FC&#39;)          : 1.75 -&gt; 1.83 (1.04)
-DefenceParameterKey(label=&#39;Sunderland AFC&#39;)          : 1.46 -&gt; 1.22 (0.84)
-DefenceParameterKey(label=&#39;Southampton FC&#39;)          : 0.97 -&gt; 0.95 (0.98)
-DefenceParameterKey(label=&#39;Manchester City FC&#39;)      : 0.99 -&gt; 1.00 (1.01)
-DefenceParameterKey(label=&#39;Swansea City FC&#39;)         : 1.21 -&gt; 1.18 (0.97)
-DefenceParameterKey(label=&#39;Leicester City FC&#39;)       : 0.86 -&gt; 0.68 (0.79)
-DefenceParameterKey(label=&#39;Arsenal FC&#39;)              : 0.86 -&gt; 0.85 (0.98)
-DefenceParameterKey(label=&#39;Watford FC&#39;)              : 1.17 -&gt; 1.33 (1.14)
-DefenceParameterKey(label=&#39;AFC Bournemouth&#39;)         : 1.57 -&gt; 1.61 (1.02)
-DefenceParameterKey(label=&#39;Norwich City FC&#39;)         : 1.55 -&gt; 1.51 (0.97)
-DefenceParameterKey(label=&#39;Newcastle United FC&#39;)     : 1.52 -&gt; 1.37 (0.90)
-DefenceParameterKey(label=&#39;Crystal Palace FC&#39;)       : 1.19 -&gt; 1.25 (1.05)
-ParameterKey(label=&#39;Home-field advantage&#39;)           : 1.23 -&gt; 1.30 (1.05)
-ParameterKey(label=&#39;Rho&#39;)                            : 0.94 -&gt; 0.91 (0.97)
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
