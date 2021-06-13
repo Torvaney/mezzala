@@ -235,7 +235,7 @@ class DixonColes:
 
         probs = np.exp(self._log_like(home_goals, away_goals, home_rate, away_rate, rho))
 
-        return [ScorelinePrediction(*vals) for vals in zip(home_goals, away_goals, probs)]
+        return [ScorelinePrediction(*vals) for vals in zip(home_goals.tolist(), away_goals.tolist(), probs)]
 
     def predict(self, data, up_to=26):
         scorelines = [self.predict_one(row, up_to=up_to) for row in data]
