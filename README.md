@@ -117,11 +117,11 @@ scorelines[0:5]
 
 
 
-    [ScorelinePrediction(home_goals=0, away_goals=0, probability=0.020371535300353828),
-     ScorelinePrediction(home_goals=0, away_goals=1, probability=0.0159355409561689),
-     ScorelinePrediction(home_goals=0, away_goals=2, probability=0.006232752264904788),
-     ScorelinePrediction(home_goals=0, away_goals=3, probability=0.0016251807161750751),
-     ScorelinePrediction(home_goals=0, away_goals=4, probability=0.00031782255831417364)]
+    [ScorelinePrediction(home_goals=0, away_goals=0, probability=0.023625049697587167),
+     ScorelinePrediction(home_goals=0, away_goals=1, probability=0.012682094432376022),
+     ScorelinePrediction(home_goals=0, away_goals=2, probability=0.00623268833779594),
+     ScorelinePrediction(home_goals=0, away_goals=3, probability=0.0016251514235046444),
+     ScorelinePrediction(home_goals=0, away_goals=4, probability=0.00031781436109636405)]
 
 
 
@@ -139,9 +139,9 @@ mezzala.scorelines_to_outcomes(scorelines)
 
 
 
-    {Outcomes('Home win'): OutcomePrediction(outcome=Outcomes('Home win'), probability=0.8287625653027142),
-     Outcomes('Draw'): OutcomePrediction(outcome=Outcomes('Draw'), probability=0.10965025769892027),
-     Outcomes('Away win'): OutcomePrediction(outcome=Outcomes('Away win'), probability=0.061587176998363344)}
+    {Outcomes('Home win'): OutcomePrediction(outcome=Outcomes('Home win'), probability=0.8255103334702835),
+     Outcomes('Draw'): OutcomePrediction(outcome=Outcomes('Draw'), probability=0.11615659853961693),
+     Outcomes('Away win'): OutcomePrediction(outcome=Outcomes('Away win'), probability=0.058333067990098304)}
 
 
 
@@ -165,7 +165,7 @@ mezzala.DixonColes(
 
 
 
-    DixonColes(adapter=KeyAdapter(home_goals=['score', 'ft', 0], away_goals=['score', 'ft', 1], home_team='team1', away_team='team2'), blocks=[TeamStrength(), BaseRate(), HomeAdvantage()]), weight=<function <lambda> at 0x127567510>
+    DixonColes(adapter=KeyAdapter(home_goals=['score', 'ft', 0], away_goals=['score', 'ft', 1], home_team='team1', away_team='team2'), blocks=[TeamStrength(), BaseRate(), HomeAdvantage()]), weight=<function <lambda> at 0x123067488>
 
 
 
@@ -184,7 +184,7 @@ mezzala.DixonColes(
 
 
 
-    DixonColes(adapter=KeyAdapter(home_goals=['score', 'ft', 0], away_goals=['score', 'ft', 1], home_team='team1', away_team='team2'), blocks=[TeamStrength(), BaseRate(), HomeAdvantage()]), weight=ExponentialWeight(epsilon=-0.0065, key=<function <lambda> at 0x12749a7b8>)
+    DixonColes(adapter=KeyAdapter(home_goals=['score', 'ft', 0], away_goals=['score', 'ft', 1], home_team='team1', away_team='team2'), blocks=[TeamStrength(), BaseRate(), HomeAdvantage()]), weight=ExponentialWeight(epsilon=-0.0065, key=<function <lambda> at 0x122f938c8>)
 
 
 

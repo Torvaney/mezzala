@@ -51,10 +51,14 @@ class BaseRate(ModelBlockABC):
         return [mezzala.parameters.AVG_KEY]
 
     def home_terms(self, adapter, row):
-        return [mezzala.parameters.AVG_KEY]
+        return [
+            (mezzala.parameters.AVG_KEY, 1.0)
+        ]
 
     def away_terms(self, adapter, row):
-        return [mezzala.parameters.AVG_KEY]
+        return [
+            (mezzala.parameters.AVG_KEY, 1.0)
+        ]
 
 # Cell
 
@@ -78,7 +82,9 @@ class HomeAdvantage(ModelBlockABC):
         return [mezzala.parameters.HFA_KEY]
 
     def home_terms(self, adapter, row):
-        return [mezzala.parameters.HFA_KEY]
+        return [
+            (mezzala.parameters.HFA_KEY, 1.0)
+        ]
 
 # Cell
 
@@ -87,7 +93,6 @@ class TeamStrength(ModelBlockABC):
     """
     Estimate team offence and team defence parameters.
     """
-
 
     # This is a gross hack so that we know that the
     # team strength parameters come first, and thus can
@@ -127,14 +132,14 @@ class TeamStrength(ModelBlockABC):
 
     def home_terms(self, adapter, row):
         return [
-            self.offence_key(adapter.home_team(row)),
-            self.defence_key(adapter.away_team(row))
+            (self.offence_key(adapter.home_team(row)), 1.0),
+            (self.defence_key(adapter.away_team(row)), 1.0),
         ]
 
     def away_terms(self, adapter, row):
         return [
-            self.offence_key(adapter.away_team(row)),
-            self.defence_key(adapter.home_team(row))
+            (self.offence_key(adapter.away_team(row)), 1.0),
+            (self.defence_key(adapter.home_team(row)), 1.0),
         ]
 
 # Cell
