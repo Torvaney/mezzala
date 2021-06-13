@@ -116,10 +116,10 @@ class DixonColes:
         )
 
     def _home_terms(self, row):
-        return list(itertools.chain(*[b.home_terms(self.adapter, row) for b in self.blocks]))
+        return dict(itertools.chain(*[b.home_terms(self.adapter, row) for b in self.blocks]))
 
     def _away_terms(self, row):
-        return list(itertools.chain(*[b.away_terms(self.adapter, row) for b in self.blocks]))
+        return dict(itertools.chain(*[b.away_terms(self.adapter, row) for b in self.blocks]))
 
     # Core methods
 
@@ -134,9 +134,9 @@ class DixonColes:
         for row_i, row in enumerate(data):
             home_rate_terms = self._home_terms(row)
             away_rate_terms = self._away_terms(row)
-            for param_i, param in enumerate(param_keys):
-                home_X[row_i, param_i] = 1 if param in home_rate_terms else 0
-                away_X[row_i, param_i] = 1 if param in away_rate_terms else 0
+            for param_i, param_key in enumerate(param_keys):
+                home_X[row_i, param_i] = home_rate_terms.get(param_key, 0)
+                away_X[row_i, param_i] = away_rate_terms.get(param_key, 0)
         return home_X, away_X
 
     @staticmethod
@@ -221,8 +221,8 @@ class DixonColes:
     def predict_one(self, row, up_to=26):
         scorelines = list(itertools.product(range(up_to), repeat=2))
 
-        home_goals = [h for h, a in scorelines]
-        away_goals = [a for h, a in scorelines]
+        home_goals = np.asarray([h for h, a in scorelines])
+        away_goals = np.asarray([a for h, a in scorelines])
 
         param_keys = self.params.keys()
         param_values = np.asarray([v for v in self.params.values()])
@@ -234,6 +234,7 @@ class DixonColes:
         rho = self.params[mezzala.parameters.RHO_KEY]
 
         probs = np.exp(self._log_like(home_goals, away_goals, home_rate, away_rate, rho))
+
         return [ScorelinePrediction(*vals) for vals in zip(home_goals, away_goals, probs)]
 
     def predict(self, data, up_to=26):
