@@ -70,7 +70,7 @@ def scorelines_to_outcomes(scorelines):
 
 # Cell
 
-_DEFAULT_BLOCKS = [
+_DEFAULT_DC_BLOCKS = [
     mezzala.blocks.BaseRate(),
     mezzala.blocks.HomeAdvantage(),
     mezzala.blocks.TeamStrength(),
@@ -82,7 +82,7 @@ class DixonColes:
     Dixon-Coles models in Python
     """
 
-    def __init__(self, adapter, blocks=_DEFAULT_BLOCKS, weight=mezzala.weights.UniformWeight(), params=None):
+    def __init__(self, adapter, blocks=_DEFAULT_DC_BLOCKS, weight=mezzala.weights.UniformWeight(), params=None):
         # NOTE: Should params be stored internally as separate lists of keys and values?
         # Then `params` (the dict) can be a property?
         self.params = params
